@@ -1,27 +1,25 @@
 package main;
 
 import juego.ModoJuego;
+import juego.Partida;
+import juego.Ronda;
 
-/**
- * Gestiona el menú principal del Blackjack.
- */
+
 public class Menu {
-
-    /**
-     * Muestra el menú principal y devuelve el modo elegido.
-     * @return modo de juego seleccionado
-     */
+	
+	Consola consola = new Consola();
+	
     public ModoJuego seleccionarModo() {
         int opcion;
 
         do {
-            System.out.println("\n===== BLACKJACK =====");
+            System.out.println("===== BLACKJACK =====");
             System.out.println("1. Multijugador");
             System.out.println("2. Contra Croupier");
             System.out.println("3. Contra IA");
             System.out.println("0. Salir");
 
-            opcion = Consola.leerInt("Elige una opción: ");
+            opcion = consola.leerInt("Elige una opción: ");
 
             switch (opcion) {
                 case 1:
@@ -42,14 +40,9 @@ public class Menu {
      * Inicia el flujo principal del programa.
      */
     public void iniciar() {
-        ModoJuego modo = seleccionarModo();
-
-        if (modo == null) {
-            System.out.println("Saliendo del juego...");
-            return;
-        }
-
-        juego.Partida partida = new juego.Partida(modo);
-        partida.jugar();
+    	ModoJuego modo = seleccionarModo();
+    	Partida partida = new Partida(modo);
+        Ronda ronda = new Ronda(partida);
+    	ronda.jugar();
     }
 }

@@ -7,17 +7,17 @@ public interface Jugable {
     /**
      * Ejecuta el turno del jugador.
      */
-    void jugarTurno();
+    //void jugarTurno();
 
     /**
      * Calcula la puntuación actual.
      * @return puntuación total del jugador
      */
-    int calcularPuntuacion();
+    //int calcularPuntuacion();
 
     /**
      * Indica si el jugador se ha pasado de 21.
      * @return true si se pasa, false en caso contrario
      */
-    boolean estaEliminado();
+    //boolean estaEliminado();
 }

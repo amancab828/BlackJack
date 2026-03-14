@@ -25,11 +25,6 @@ public enum TipoCarta {
         this.valor = valor;
     }
 
-    /**
-     * Obtiene el valor numérico de la carta.
-     * 
-     * @return valor de la carta
-     */
     public int getValor() {
         return valor;
     }

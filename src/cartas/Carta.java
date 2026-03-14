@@ -1,29 +1,20 @@
 package cartas;
 
-import interfaces.Mostrable;
-
 /**
  * Representa una carta de la baraja.
  */
-public class Carta implements Mostrable {
+public class Carta {
 
     private Palo palo;
     private TipoCarta tipo;
 
-    /**
-     * Constructor de carta.
-     * @param palo palo de la carta
-     * @param tipo tipo/valor de la carta
-     */
+    // Constructor
     public Carta(Palo palo, TipoCarta tipo) {
         this.palo = palo;
         this.tipo = tipo;
     }
 
-    /**
-     * Obtiene el valor de la carta.
-     * @return valor numérico
-     */
+    // Getters
     public int getValor() {
         return tipo.getValor();
     }
@@ -36,8 +27,18 @@ public class Carta implements Mostrable {
         return tipo;
     }
 
-    @Override
-    public String mostrar() {
-        return tipo + " de " + palo;
+    // Método para mostrar A, J, Q, K en lugar de 1, 11, 12, 13
+    public String getValorString() {
+        return switch (tipo) {
+            case AS -> "A";
+            case JOTA -> "J";
+            case REINA -> "Q";
+            case REY -> "K";
+            default -> String.valueOf(tipo.getValor());
+        };
+    }
+
+    public String getSimboloPalo() {
+        return palo.getSimbolo();
     }
 }
