@@ -1,23 +1,20 @@
 package interfaces;
 
-/**
- * Interfaz que define acciones básicas de juego.
- */
+import java.util.List;
+import cartas.Carta;
+import jugadores.AccionJugador;
+
 public interface Jugable {
-    /**
-     * Ejecuta el turno del jugador.
-     */
-    //void jugarTurno();
-
-    /**
-     * Calcula la puntuación actual.
-     * @return puntuación total del jugador
-     */
-    //int calcularPuntuacion();
-
-    /**
-     * Indica si el jugador se ha pasado de 21.
-     * @return true si se pasa, false en caso contrario
-     */
-    //boolean estaEliminado();
+	String getNombre();
+	List<Carta> getMano();
+	boolean getEliminado();
+	int getVictorias();
+	void sumarVictoria();
+	void limpiarMano();
+	void setEliminado(boolean eliminado);
+	void recibirCarta(Carta carta);
+	int calcularPuntuacion();
+	void mostrarCarta(Carta carta);
+	void mostrarCartas();
+	AccionJugador decidirAccion();
 }

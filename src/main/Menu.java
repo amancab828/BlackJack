@@ -4,45 +4,64 @@ import juego.ModoJuego;
 import juego.Partida;
 import juego.Ronda;
 
-
+/**
+ * Clase que gestiona el menú principal y la ejecución del juego.
+ */
 public class Menu {
 	
 	Consola consola = new Consola();
 	
-    public ModoJuego seleccionarModo() {
+    // Selecciona el modo de juego mediante opciones de consola
+    private ModoJuego seleccionarModo() {
+    	ModoJuego modo = null;
         int opcion;
 
-        do {
-            System.out.println("===== BLACKJACK =====");
-            System.out.println("1. Multijugador");
-            System.out.println("2. Contra Croupier");
-            System.out.println("3. Contra IA");
-            System.out.println("0. Salir");
+        System.out.println("===== BLACKJACK =====");
+        System.out.println("1. Multijugador");
+        System.out.println("2. Contra Croupier");
+        System.out.println("3. Contra IA");
+        System.out.println("0. Salir");
 
-            opcion = consola.leerInt("Elige una opción: ");
+        opcion = consola.leerIntRango("Elige una opción: ", 0, 3);
 
-            switch (opcion) {
-                case 1:
-                    return ModoJuego.MULTIJUGADOR;
-                case 2:
-                    return ModoJuego.CROUPIER;
-                case 3:
-                    return ModoJuego.IA;
-                case 0:
-                    return null;
-                default:
-                    System.out.println("Opción inválida.");
+        switch (opcion) {
+            case 1 -> modo = ModoJuego.MULTIJUGADOR;
+            case 2 -> modo = ModoJuego.CROUPIER;
+            case 3 -> modo = ModoJuego.IA;
+            case 0 -> {
+                System.out.println("¡Hasta luego!");
+                return null;
             }
-        } while (true);
+        }
+            
+        return modo;
     }
 
     /**
-     * Inicia el flujo principal del programa.
+     * Inicia el flujo principal del programa, gestionando partidas y rondas.
+     * Pregunta al usuario si desea continuar jugando después de cada ronda.
      */
     public void iniciar() {
     	ModoJuego modo = seleccionarModo();
+    	
+        if (modo == null) {
+            return; // termina el programa de forma limpia
+        }
+    	
     	Partida partida = new Partida(modo);
         Ronda ronda = new Ronda(partida);
-    	ronda.jugar();
+        boolean seguirJugando = true;
+        
+        while (seguirJugando) {
+            ronda.jugar();
+
+            seguirJugando = consola.readBooleanUsingChar("\n¿Quieres jugar otra ronda? S/N: ", 'S', 'N');
+
+            if (seguirJugando) {
+                ronda.reiniciar();
+            }
+        }
+        
+        System.out.println("Gracias por jugar. ¡Hasta la próxima!");
     }
 }

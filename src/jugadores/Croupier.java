@@ -1,10 +1,13 @@
 package jugadores;
 
 import cartas.Baraja;
-import cartas.Carta;
 
 /**
- * Representa al croupier del Blackjack.
+ * Representa al croupier del Blackjack
+ * <p>
+ *    El croupier tiene un nombre fijo "Croupier" y sigue las reglas estándar.
+ *    Pide carta si su puntuación es menor que 17 y se planta si es 17 o más.
+ * </p>
  */
 public class Croupier extends Jugador {
 	
@@ -12,6 +15,9 @@ public class Croupier extends Jugador {
         super("Croupier", baraja);
     }
     
+    /**
+     * Muestra la primera carta del croupier (la visible) y la oculta
+     */
     public void mostrarCartaVisible() {
         mostrarCarta(mano.get(0));
 
@@ -25,16 +31,20 @@ public class Croupier extends Jugador {
         
     }
     
-    public void jugarTurno() {
-        System.out.println("\nTurno del Croupier");
-        while (calcularPuntuacion() < 17) {
-            Carta carta = baraja.robarCarta();
-            recibirCarta(carta);
-            System.out.println("Croupier roba: " + carta);
-        }
-        mostrarCartas();
-        if (calcularPuntuacion() > 21) {
-            System.out.println("Croupier se ha pasado 😵");
+    /**
+     * Decide la acción del croupier según las reglas del Blackjack.
+     * <p>
+     * El croupier pide carta si su puntuación es menor a 17, 
+     * y se planta en caso contrario.
+     * </p>
+     * @return la acción que realizará el croupier (PEDIR o PLANTARSE)
+     */
+    public AccionJugador decidirAccion() {
+        int puntos = calcularPuntuacion();
+        if (puntos < 17) {
+            return AccionJugador.PEDIR;
+        } else {
+            return AccionJugador.PLANTARSE;
         }
     }
 }

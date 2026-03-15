@@ -28,4 +28,19 @@ public enum TipoCarta {
     public int getValor() {
         return valor;
     }
+    
+    /**
+     * Devuelve el valor de la carta como cadena.
+     *
+     * @return cadena representando la carta
+     */
+    public String getValorString() {
+        return switch (this) {
+            case AS -> "A";
+            case JOTA -> "J";
+            case REINA -> "Q";
+            case REY -> "K";
+            default -> String.valueOf(valor); // Para cartas del 2 al 10
+        };
+    }
 }

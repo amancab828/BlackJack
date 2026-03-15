@@ -1,12 +1,11 @@
 package juego;
 
 import cartas.Baraja;
-import jugadores.*;
-import cartas.Carta;
+import jugadores.Croupier;
+import jugadores.IAJugador;
+import jugadores.Jugador;
 import main.Consola;
-
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -73,7 +72,7 @@ public class Partida {
         jugadores.add(jugador);
         
         // Creamos la IA
-        Jugador jugadorIA = new Jugador("IA", baraja);
+        Jugador jugadorIA = new IAJugador(baraja);
         jugadores.add(jugadorIA);
     }
 }
