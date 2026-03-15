@@ -1,6 +1,6 @@
 package interfaces;
 
-public interface IConsonla {
+public interface IConsola {
 	String leerString(String msg);
 	int leerInt(String msg);
 	int leerIntRango(String msg, int minimo, int maximo);

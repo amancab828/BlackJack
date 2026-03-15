@@ -101,42 +101,63 @@ public class Ronda {
 	    croupier.mostrarCartaVisible();
 	}
 
+	//Mirar muy bien aqui esta funcion y repasarla
 	private void turnoJugadores() {
-	    AccionJugador accion;
-	    Carta carta;
+	    boolean todosPlantados;
 
-	    for (Jugador jugador : jugadores) {
-	        boolean turnoActivo = true;
-	        System.out.println("\n-------------------------------");
-	        System.out.println("Turno de " + jugador.getNombre());
+	    do {
+	        todosPlantados = true;
 
-	        while (turnoActivo && !jugador.getEliminado()) {
-	            jugador.mostrarCartas();
-
-	            // Decide acción
-	            if (jugador instanceof IAJugador) {
-	                accion = jugador.decidirAccion();
-	                System.out.println(jugador.getNombre() + " decide: " + accion);
-	            } else {
-	                accion = jugador.decidirAccion();
-	            }
-
-	            // Ejecuta acción
-	            switch (accion) {
-	                case PEDIR -> {
-	                    carta = baraja.robarCarta();
-	                    jugador.recibirCarta(carta);
-	                    jugador.mostrarCarta(carta);
-	                }
-	                case PLANTARSE -> turnoActivo = false;
-	            }
-
-	            if (jugador.getEliminado()) {
-	                System.out.println(jugador.getNombre() + " se ha pasado");
-	                turnoActivo = false;
+	        // 1️⃣ Mostrar cartas de todos al inicio de la vuelta
+	        System.out.println("\n===== NUEVA VUELTA =====");
+	        for (Jugador j : jugadores) {
+	            if (!j.getEliminado()) {
+	                j.mostrarCartas();
 	            }
 	        }
-	    }
+
+	        // 2️⃣ Preguntar a todos qué quieren hacer
+	        AccionJugador[] decisiones = new AccionJugador[jugadores.length];
+	        for (int i = 0; i < jugadores.length; i++) {
+	            Jugador j = jugadores[i];
+
+	            if (!j.getEliminado()) {
+	                decisiones[i] = j.decidirAccion();
+
+	                if (decisiones[i] == AccionJugador.PEDIR) {
+	                    todosPlantados = false;
+	                } else {
+	                    decisiones[i] = AccionJugador.PLANTARSE;
+	                }
+	            } else {
+	                decisiones[i] = AccionJugador.PLANTARSE;
+	            }
+	        }
+
+	        // 3️⃣ Repartir cartas a quienes pidieron
+	        for (int i = 0; i < jugadores.length; i++) {
+	            Jugador j = jugadores[i];
+
+	            if (decisiones[i] == AccionJugador.PEDIR) {
+	                Carta carta = baraja.robarCarta();
+	                j.recibirCarta(carta);
+
+	                System.out.println("\n" + j.getNombre() + " roba:");
+	                j.mostrarCarta(carta);
+
+	                if (j.getEliminado()) {
+	                    System.out.println(j.getNombre() + " se ha pasado.");
+	                }
+	            }
+	        }
+
+	        // 4️⃣ Mostrar el estado actualizado de todos
+	        System.out.println("\n===== ESTADO ACTUAL =====");
+	        for (Jugador j : jugadores) {
+	            j.mostrarCartas();
+	        }
+
+	    } while (!todosPlantados);
 	}
 
 	private void turnoCroupier() {

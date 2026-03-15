@@ -47,7 +47,7 @@ public class Baraja {
      */
     public Carta robarCarta() {
         // Si la baraja está vacía, reiniciamos y barajamos
-        if (quedanCartas()) {
+        if (!quedanCartas()) {
             System.out.println("La baraja se ha acabado. Barajamos");
             inicializar();
             barajar();

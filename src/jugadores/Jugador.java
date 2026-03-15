@@ -154,6 +154,7 @@ public class Jugador implements Jugable {
     public AccionJugador decidirAccion() {
     	AccionJugador accion = null;
     	int opcion;
+    	System.out.println("\nTurno de " + nombre + " (Puntos: " + calcularPuntuacion() + ")");
         System.out.println("¿Qué quieres hacer?");
         System.out.println("1. Pedir carta");
         System.out.println("2. Plantarse");

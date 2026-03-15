@@ -6,7 +6,7 @@ import java.util.Scanner;
 /**
  * Utilidades de entrada/salida por consola.
  */
-public class Consola implements interfaces.IConsonla {
+public class Consola implements interfaces.IConsola {
 
     private static final Scanner sc = new Scanner(System.in);
 
