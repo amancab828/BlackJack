@@ -37,9 +37,7 @@ public class Ronda {
 	    }
 	}
 	
-    /** 
-     * 2️ - Preguntar a todos qué quieren hacer solo si no está eliminado ni plantado
-     */
+    //2️ - Preguntar a todos qué quieren hacer solo si no está eliminado ni plantado
 	private AccionJugador[] decidirAcciones() {
 	    AccionJugador[] decisiones = new AccionJugador[jugadores.length];
 	    
