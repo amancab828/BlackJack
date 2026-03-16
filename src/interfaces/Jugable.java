@@ -9,9 +9,11 @@ public interface Jugable {
 	List<Carta> getMano();
 	boolean getEliminado();
 	int getVictorias();
+	boolean getPlantado();
 	void sumarVictoria();
 	void limpiarMano();
 	void setEliminado(boolean eliminado);
+	void setPlantado(boolean plantado);
 	void recibirCarta(Carta carta);
 	int calcularPuntuacion();
 	void mostrarCarta(Carta carta);

@@ -49,6 +49,11 @@ public class Jugador implements Jugable {
     public int getVictorias() {
         return victorias;
     }
+    /** Retorna el número de victorias acumuladas del jugador*/
+    @Override
+    public boolean getPlantado() {
+        return plantado;
+    }
     /** Suma 1 a las victorias del jugador*/
     @Override
     public void sumarVictoria() {
@@ -67,6 +72,14 @@ public class Jugador implements Jugable {
     @Override
     public void setEliminado(boolean eliminado) {
         this.eliminado = eliminado;
+    }
+    /**
+     * Establece si el jugador está eliminado o no.
+     * @param eliminado true si el jugador se ha pasado, false si sigue en juego
+     */
+    @Override
+    public void setPlantado(boolean plantado) {
+        this.plantado = plantado;
     }
     
     /**

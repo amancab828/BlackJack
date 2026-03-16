@@ -18,7 +18,8 @@ public class Croupier extends Jugador {
     /**
      * Muestra la primera carta del croupier (la visible) y la oculta
      */
-    public void mostrarCartaVisible() {
+    public void mostrarCartaCroupier() {
+    	System.out.println("\nCartas del Croupier:");
         mostrarCarta(mano.get(0));
 
         System.out.println("┌─────────┐");

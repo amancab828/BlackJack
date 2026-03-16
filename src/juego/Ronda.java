@@ -4,7 +4,6 @@ import cartas.Baraja;
 import cartas.Carta;
 import jugadores.AccionJugador;
 import jugadores.Croupier;
-import jugadores.IAJugador;
 import jugadores.Jugador;
 
 public class Ronda {
@@ -19,6 +18,7 @@ public class Ronda {
 	    this.baraja = new Baraja();
 	}
 	
+	// Reparto inicial, 2 cartas a cada jugador y al croupier
 	private void repartirInicial() {
 	    for (int i = 0; i < 2; i++) {
 	        for (Jugador j : jugadores) {
@@ -27,139 +27,94 @@ public class Ronda {
 	        croupier.recibirCarta(baraja.robarCarta());
 	    }
 	}
-	
-	private void calcularGanadorRonda() {
 
-	    int mejorPuntuacion = 0;
-	    Jugador ganador = null;
-	    boolean empate = false;
-
-	    // 1️ Mirar jugadores
+    // 1 - Mostrar cartas de todos al inicio de la vuelta
+	private void mostrarCartasJugadores() {
 	    for (Jugador j : jugadores) {
-
-	        int puntos = j.calcularPuntuacion();
-
-	        if (puntos <= 21) {
-
-	            if (puntos > mejorPuntuacion) {
-	                mejorPuntuacion = puntos;
-	                ganador = j;
-	                empate = false;
+	        if (!j.getEliminado()) {
+	            j.mostrarCartas();
+	        }
+	    }
+	}
+	
+    /** 
+     * 2️ - Preguntar a todos qué quieren hacer solo si no está eliminado ni plantado
+     */
+	private AccionJugador[] decidirAcciones() {
+	    AccionJugador[] decisiones = new AccionJugador[jugadores.length];
+	    
+	    for (int i = 0; i < jugadores.length; i++) {
+	        Jugador j = jugadores[i];
+	        
+	        if (!j.getEliminado() && !j.getPlantado()) {
+	            // Preguntamos su acción
+	            decisiones[i] = j.decidirAccion();
+	            
+	            // Si decide plantarse, lo marcamos para no volver a preguntar
+	            if (decisiones[i] == AccionJugador.PLANTARSE) {
+	                j.setPlantado(true);
 	            }
-	            else if (puntos == mejorPuntuacion) {
-	                empate = true;
-	            }
 	        }
-	    }
-
-	    // 2️ Mirar croupier
-	    int puntosCroupier = croupier.calcularPuntuacion();
-
-	    if (puntosCroupier <= 21) {
-
-	        if (puntosCroupier > mejorPuntuacion) {
-	            ganador = null;     // gana croupier
-	            empate = false;
-	        }
-	        else if (puntosCroupier == mejorPuntuacion) {
-	            empate = true;
-	        }
-	    }
-
-	    // 3️ Resultado final
-	    if (mejorPuntuacion == 0 && puntosCroupier > 21) {
-	        System.out.println("\nTodos se pasaron.");
-	        return;
-	    }
-
-	    if (empate) {
-	        System.out.println("\nEmpate.");
-	    } else if (ganador != null) {
-	        ganador.sumarVictoria();
-	        System.out.println("\nGana " + ganador.getNombre() +
-	                " con " + ganador.calcularPuntuacion() + " puntos.");
-	    } else {
-	        croupier.sumarVictoria();
-	        System.out.println("\nGana el Croupier con " +
-	                puntosCroupier + " puntos.");
 	    }
 	    
-	    mostrarMarcador();
+	    return decisiones;
 	}
 	
-	private void mostrarMarcador() {
-	    System.out.println("\n===== MARCADOR =====");
-	    for (Jugador j : jugadores) {
-	        System.out.println(j.getNombre() + " → " + j.getVictorias());
+    // 3️ - Repartir cartas a quienes pidieron
+	private void repartirCartas(AccionJugador[] decisiones) {
+	    for (int i = 0; i < jugadores.length; i++) {
+	        Jugador j = jugadores[i];
+	        
+	        // Si el jugador decidió pedir, le damos una carta y la mostramos
+	        if (decisiones[i] == AccionJugador.PEDIR) {
+	        	// Robamos una carta de la baraja y se la damos al jugador
+	            Carta carta = baraja.robarCarta();
+	            j.recibirCarta(carta);
+	            
+	            // Mostramos la carta que ha robado el jugador
+	            System.out.println("\n" + j.getNombre() + " roba:");
+	            j.mostrarCarta(carta);
+	            
+	            // Si el jugador se ha pasado
+	            if (j.getEliminado()) {
+	            	j.setEliminado(true);
+	                System.out.println(j.getNombre() + " se ha pasado.");
+	            }
+	        }
 	    }
-	    System.out.println("Croupier → " + croupier.getVictorias());
-	    System.out.println("===================\n");
 	}
 	
-	private void mostrarCartaVisibleCroupier() {
-	    System.out.println("\nCartas del Croupier:");
-	    croupier.mostrarCartaVisible();
-	}
-
-	//Mirar muy bien aqui esta funcion y repasarla
+	/**
+	 * Gestiona los turnos de todos los jugadores hasta que
+	 * todos se planten o sean eliminados.
+	 */
 	private void turnoJugadores() {
 	    boolean todosPlantados;
 
 	    do {
 	        todosPlantados = true;
-
-	        // 1️⃣ Mostrar cartas de todos al inicio de la vuelta
+	        
+	        // 1️ - Mostrar cartas de todos al inicio de la vuelta
 	        System.out.println("\n===== NUEVA VUELTA =====");
-	        for (Jugador j : jugadores) {
-	            if (!j.getEliminado()) {
-	                j.mostrarCartas();
+	        mostrarCartasJugadores();
+	        
+	        // 2️ - Preguntar a todos qué quieren hacer
+	        AccionJugador[] decisiones = decidirAcciones();
+	        for (AccionJugador decision : decisiones) {
+	            if (decision == AccionJugador.PEDIR) {
+	            	todosPlantados = false;
 	            }
 	        }
 
-	        // 2️⃣ Preguntar a todos qué quieren hacer
-	        AccionJugador[] decisiones = new AccionJugador[jugadores.length];
-	        for (int i = 0; i < jugadores.length; i++) {
-	            Jugador j = jugadores[i];
-
-	            if (!j.getEliminado()) {
-	                decisiones[i] = j.decidirAccion();
-
-	                if (decisiones[i] == AccionJugador.PEDIR) {
-	                    todosPlantados = false;
-	                } else {
-	                    decisiones[i] = AccionJugador.PLANTARSE;
-	                }
-	            } else {
-	                decisiones[i] = AccionJugador.PLANTARSE;
-	            }
-	        }
-
-	        // 3️⃣ Repartir cartas a quienes pidieron
-	        for (int i = 0; i < jugadores.length; i++) {
-	            Jugador j = jugadores[i];
-
-	            if (decisiones[i] == AccionJugador.PEDIR) {
-	                Carta carta = baraja.robarCarta();
-	                j.recibirCarta(carta);
-
-	                System.out.println("\n" + j.getNombre() + " roba:");
-	                j.mostrarCarta(carta);
-
-	                if (j.getEliminado()) {
-	                    System.out.println(j.getNombre() + " se ha pasado.");
-	                }
-	            }
-	        }
-
-	        // 4️⃣ Mostrar el estado actualizado de todos
-	        System.out.println("\n===== ESTADO ACTUAL =====");
-	        for (Jugador j : jugadores) {
-	            j.mostrarCartas();
-	        }
-
+	        // 3️ - Repartir cartas a quienes pidieron y las mostramos
+	        repartirCartas(decisiones);
 	    } while (!todosPlantados);
 	}
 
+	/**
+	 * Ejecuta el turno automático del croupier,
+	 * que roba cartas hasta alcanzar al menos 17 puntos.
+	 */
 	private void turnoCroupier() {
 	    Carta carta;
 	    System.out.println("\n-------------------------------");
@@ -190,10 +145,9 @@ public class Ronda {
 	    System.out.println("\n======= Comienza la ronda =======");
 
 	    repartirInicial();
-	    mostrarCartaVisibleCroupier();
+	    croupier.mostrarCartaCroupier();
 	    turnoJugadores();
 	    turnoCroupier();
-	    calcularGanadorRonda();
 	}
 	
 	/**

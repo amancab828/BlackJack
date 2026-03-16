@@ -11,9 +11,7 @@ public class Baraja {
 
     private List<Carta> cartas;
 
-    /**
-     * Crea una baraja nueva y la baraja automáticamente.
-     */
+    // Crea una baraja nueva y la baraja automáticamente.
     public Baraja() {
         cartas = new ArrayList<>();
         inicializar();
